@@ -3,6 +3,7 @@ import sys
 import os
 import datetime
 import asciitable
+import time
 
 TIME_FORMAT = "%I:%M%p"
 DATE_FORMAT = "%a %d/%m/%y"
@@ -45,7 +46,9 @@ def get_status(status_list, from_path):
 
 def process_stat(args):
     client = pysvn.Client()
+    t1 = time.time()
     status = client.status(args.path)
+    t2 = time.time()
     asciitable.write(
             get_status(status, args.path), 
             sys.stdout, 
@@ -56,6 +59,10 @@ def process_stat(args):
                 "modified": format_timestamp, 
                 "status": str
             })
+    print 
+    now = time.time()
+    print "[svn st in %.2f sec, total %.2f]" % (t2 - t1, now - t1)
+    print
 
 def main():
     import argparse
